@@ -1,10 +1,6 @@
 // Import required modules
-const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
-
-// Create an instance of express
-const app = express();
 
 // Set up MySQL connection
 const connection = mysql.createConnection({
@@ -16,14 +12,66 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log('Connected to MySQL');
-});
+    start();
+  });
 
-// Set up express to handle data parsing
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+  function start() {
+    inquirer
+      .prompt({
+        name: 'action',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: [
+          'View all departments',
+          'View all roles',
+          'View all employees',
+          'Exit'
+        ]
+      })
+      .then((answer) => {
+        switch (answer.action) {
+          case 'View all departments':
+            viewDepartments();
+            break;
+  
+          case 'View all roles':
+            viewRoles();
+            break;
+  
+          case 'View all employees':
+            viewEmployees();
+            break;
+  
+          case 'Exit':
+            connection.end();
+            break;
+        }
+      });
+  }
 
-// Start the server
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-});
+  function viewDepartments() {
+    const query = 'SELECT * FROM department';
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      console.log(res);
+      start();
+    });
+  }
+  
+  function viewRoles() {
+    const query = 'SELECT * FROM role';
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      console.log(res);
+      start();
+    });
+  }
+  
+  function viewEmployees() {
+    const query = 'SELECT * FROM employee';
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      console.log(res);
+      start();
+    });
+  }
