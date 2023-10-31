@@ -1,10 +1,10 @@
 // Import required modules
 const inquirer = require('inquirer');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 // Set up MySQL connection
 const connection = mysql.createConnection({
-    host: '127.0.0.2',
+    host: '127.0.0.1',
     user: 'root',
     password: '',
     database: 'employee_tracker_db'
@@ -18,7 +18,7 @@ connection.connect((err) => {
   function start() {
     inquirer
       .prompt({
-        name: 'action',
+        name: 'choice',
         type: 'list',
         message: 'What would you like to do?',
         choices: [
@@ -29,7 +29,7 @@ connection.connect((err) => {
         ]
       })
       .then((answer) => {
-        switch (answer.action) {
+        switch (answer.choice) {
           case 'View all departments':
             viewDepartments();
             break;
@@ -53,7 +53,7 @@ connection.connect((err) => {
     const query = 'SELECT * FROM department';
     connection.query(query, (err, res) => {
       if (err) throw err;
-      console.log(res);
+      console.table(res);
       start();
     });
   }
@@ -62,7 +62,7 @@ connection.connect((err) => {
     const query = 'SELECT * FROM role';
     connection.query(query, (err, res) => {
       if (err) throw err;
-      console.log(res);
+      console.table(res);
       start();
     });
   }
@@ -71,7 +71,7 @@ connection.connect((err) => {
     const query = 'SELECT * FROM employee';
     connection.query(query, (err, res) => {
       if (err) throw err;
-      console.log(res);
+      console.table(res);
       start();
     });
   }
