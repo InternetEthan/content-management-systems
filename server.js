@@ -28,6 +28,7 @@ connection.connect((err) => {
           'Add department',
           'Add role',
           'Add employee',
+          'Update employee role',
           'Exit'
         ]
       })
@@ -55,6 +56,10 @@ connection.connect((err) => {
 
             case 'Add employee':
             addEmployee();
+            break;
+
+            case "update employee role":
+            updateEmployeeRole();
             break;
   
           case 'Exit':
@@ -166,6 +171,30 @@ connection.connect((err) => {
         connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
           if (err) throw err;
           console.log('Employee added!');
+          start();
+        });
+      });
+  }
+
+  function updateEmployeeRole() {
+    inquirer
+      .prompt([
+        {
+          name: 'employee_id',
+          type: 'input',
+          message: 'What is the ID of the employee whose role you would like to update?'
+        },
+        {
+          name: 'role_id',
+          type: 'input',
+          message: 'What is the new role ID for this employee?'
+        }
+      ])
+      .then((answer) => {
+        const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
+        connection.query(query, [answer.role_id, answer.employee_id], (err, res) => {
+          if (err) throw err;
+          console.log('Employee role updated!');
           start();
         });
       });
