@@ -96,30 +96,42 @@ connection.connect((err) => {
     });
   }
 
-  function addDepartment() {
+  addDepartment = () => {
     inquirer
-      .prompt({
-        name: 'department',
-        type: 'input',
-        message: 'What department would you like to add?'
-      })
+      .prompt([
+        {
+          name: 'id',
+          type: 'input',
+          message: 'Enter a unique ID for the department:'
+        },
+        {
+          name: 'department',
+          type: 'input',
+          message: 'What is the name of the department?'
+        }
+      ])
       .then((answer) => {
-        const query = 'INSERT INTO department (name) VALUES (?)';
-        connection.query(query, answer.department, (err, res) => {
+        const query = 'INSERT INTO department (id, name) VALUES (?, ?)';
+        connection.query(query, [answer.id, answer.department], (err, res) => {
           if (err) throw err;
-          console.log('Department added!');
+          console.log('Department added.');
           start();
         });
       });
   }
 
-  function addRole() {
+  addRole = () => {
     inquirer
       .prompt([
         {
+          name: 'id',
+          type: 'input',
+          message: 'Enter a unique ID for the role:'
+        },
+        {
           name: 'title',
           type: 'input',
-          message: 'What role would you like to add?'
+          message: 'What is the title of the role?'
         },
         {
           name: 'salary',
@@ -133,68 +145,49 @@ connection.connect((err) => {
         }
       ])
       .then((answer) => {
-        const query = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
-        connection.query(query, [answer.title, answer.salary, answer.department_id], (err, res) => {
+        const query = 'INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?)';
+        connection.query(query, [answer.id, answer.title, answer.salary, answer.department_id], (err, res) => {
           if (err) throw err;
-          console.log('Role added!');
+          console.log('Role added.');
           start();
         });
       });
   }
 
-  function addEmployee() {
+  addEmployee = () => {
     inquirer
       .prompt([
         {
+          name: 'id',
+          type: 'input',
+          message: 'Enter a unique ID for the employee:'
+        },
+        {
           name: 'first_name',
           type: 'input',
-          message: 'What is the employee\'s first name?'
+          message: 'What is the first name of the employee?'
         },
         {
           name: 'last_name',
           type: 'input',
-          message: 'What is the employee\'s last name?'
+          message: 'What is the last name of the employee?'
         },
         {
           name: 'role_id',
           type: 'input',
-          message: 'What is the employee\'s role ID?'
+          message: 'What is the role ID for this employee?'
         },
         {
           name: 'manager_id',
           type: 'input',
-          message: 'What is the employee\'s manager ID?'
+          message: 'What is the manager ID for this employee?'
         }
       ])
       .then((answer) => {
-        const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)';
-        connection.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
+        const query = 'INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?)';
+        connection.query(query, [answer.id, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
           if (err) throw err;
-          console.log('Employee added!');
-          start();
-        });
-      });
-  }
-
-  function updateEmployeeRole() {
-    inquirer
-      .prompt([
-        {
-          name: 'employee_id',
-          type: 'input',
-          message: 'What is the ID of the employee whose role you would like to update?'
-        },
-        {
-          name: 'role_id',
-          type: 'input',
-          message: 'What is the new role ID for this employee?'
-        }
-      ])
-      .then((answer) => {
-        const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
-        connection.query(query, [answer.role_id, answer.employee_id], (err, res) => {
-          if (err) throw err;
-          console.log('Employee role updated!');
+          console.log('Employee added.');
           start();
         });
       });
