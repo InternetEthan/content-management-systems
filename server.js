@@ -58,7 +58,7 @@ connection.connect((err) => {
             addEmployee();
             break;
 
-            case "update employee role":
+            case 'update employee role':
             updateEmployeeRole();
             break;
   
@@ -188,6 +188,30 @@ connection.connect((err) => {
         connection.query(query, [answer.id, answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
           if (err) throw err;
           console.log('Employee added.');
+          start();
+        });
+      });
+  }
+  
+  updateEmployeeRole = () => {
+    inquirer
+      .prompt([
+        {
+          name: 'id',
+          type: 'input',
+          message: 'Enter the ID of the employee you would like to update:'
+        },
+        {
+          name: 'role_id',
+          type: 'input',
+          message: 'Enter the new role ID for this employee:'
+        }
+      ])
+      .then((answer) => {
+        const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
+        connection.query(query, [answer.role_id, answer.id], (err) => {
+          if (err) throw err;
+          console.log('Employee role updated.');
           start();
         });
       });
